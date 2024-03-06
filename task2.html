@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        div {
+            padding: 10px;
+        }
+
+        .newTableRow {
+            display: flex;
+            border: 1px solid #ededed;
+            padding: 10px;
+        }
+
+        .Task-Btn {
+            background-color: yellow;
+            color: #220f0f;
+            margin-left: 10px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .Delete-Btn {
+            background-color: red;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .result-row {
+            border: 1px solid #ededed;
+        }
+
+        p {
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div style="display: flex; max-width: 800px;">
+        <div><input type="text" name="task-input" id="task-input" placeholder="Enter Task"></div>
+        <div><select name="" id="task-priorty">
+                <option value="Top Priorty">Top Priorty</option>
+                <option value="Mid Priorty">Mid Priorty</option>
+                <option value="Low Priorty">Mid Priorty</option>
+            </select></div>
+        <div><input type="date" name="" id="task-date"></div>
+        <div><button id="btn">ADD</button></div>
+    </div>
+    <br />
+    <div class="result-row">
+
+    </div>
+
+</body>
+
+<script>
+    let taskInput = document.getElementById("task-input");
+
+    let taskPriorty = document.getElementById("task-priorty");
+
+    let taskDate = document.getElementById("task-date");
+
+    const btn = document.getElementById("btn");
+
+    const resultRow = document.querySelector(".result-row");
+
+    const span = document.createElement("span");
+
+
+    function spanAlert() {
+        if (resultRow.children.length === 0) {
+            span.innerText = "No task any more";
+            span.style.color = "red";
+            resultRow.append(span);
+        }
+        else {
+            span.remove();
+        }
+    }
+    spanAlert();
+
+    btn.addEventListener("click", () => {
+
+        spanAlert();
+
+
+        if (taskInput.value === "" || taskDate.value === "") {
+            alert("Please select an upcoming date for the deadline.")
+            return;
+        }
+
+        const selectedDate = new Date(taskDate.value);
+        const currentDate = new Date();
+
+        if (selectedDate <= currentDate) {
+            alert("Please select an upcoming date for the deadline.");
+            return; // Don't add task if deadline is not in the future
+        }
+
+        let newTableRow = document.createElement("div");
+        newTableRow.classList.add("newTableRow");
+        newTableRow.innerHTML =
+            `<p>${taskInput.value}</p>
+            <p>${taskPriorty.value}</p>
+            <p>${taskDate.value}</p>
+            <button class="Task-Btn">Pending Task</button>
+            <button class="Delete-Btn">Delete Task</button>
+            <br />
+        `;
+        resultRow.append(newTableRow);
+
+        taskInput.value = "";
+        taskPriorty.value = "Top Priorty";
+        taskDate.value = "";
+    });
+
+    resultRow.addEventListener("click", (evt) => {
+        if (evt.target.classList.contains("Task-Btn")) {
+
+            let markDone = document.querySelector(".Task-Btn");
+            markDone = event.target;
+            markDone.innerText = "Task Complete";
+            markDone.style.backgroundColor = "green";
+            markDone.style.color = "white";
+        }
+        else if (evt.target.classList.contains("Delete-Btn")) {
+            let deleteBtn = document.querySelector("Delete-Btn");
+            deleteBtn = event.target.parentElement;
+            deleteBtn.remove();
+
+            spanAlert();
+        }
+    });
+
+</script>
+
+</html>
